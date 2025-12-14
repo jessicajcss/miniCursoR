@@ -1,0 +1,112 @@
+---
+title: "Aula 04: Análise de Frequência de Cheias"
+author: "Conclusão do Curso"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+
+# 4. Análise de Frequência e Risco (O Avançado)
+*Foco: Máximas Anuais, Gumbel, Período de Retorno e Gráficos ggplot2 (Baseado na Aula 5 e Semana Universitária).*
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+<center>
+![Artwork by @allison_horst](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png){width=60%}
+</center>
+
+
+
+## 4.1 Teoria: Período de Retorno
+O objetivo é estimar a probabilidade de uma cheia ser igualada ou superada. $$ T_r = \frac{1}{P(X \ge x)} $$
+
+
+## 4.2 Preparando a Série de Máximas
+Precisamos ordenar as máximas anuais da maior para a menor e calcular a probabilidade empírica (Plotting Position). Usaremos a fórmula de Weibull: $P = \frac{m}{n+1}$.
+
+```{r}
+# Vamos simular uma série de máximas anuais (como se tivéssemos extraído na Aula 3)
+set.seed(999) # Para reprodutibilidade
+dados_maximas <- data.frame(
+  Ano = 1980:2020,
+  Q_max = rlnorm(41, meanlog = 5, sdlog = 0.4) # Simulação Log-Normal
+)
+
+# Processamento
+dados_freq <- dados_maximas %>%
+  arrange(desc(Q_max)) %>% # Ordenar decrescente
+  mutate(
+    Ordem_m = row_number(),
+    n = n(),
+    Prob_Empirica = Ordem_m / (n + 1),
+    Tr_Empirico = 1 / Prob_Empirica
+  )
+
+head(dados_freq)
+```
+
+
+## 4.3 Ajuste de Distribuição (Gumbel)
+Vamos ajustar a distribuição de Gumbel pelo Método dos Momentos (como visto na Aula 5).
+  
+```{r}
+# Parâmetros da amostra
+media <- mean(dados_freq$Q_max)
+desvio <- sd(dados_freq$Q_max)
+
+# Parâmetros Gumbel (Alfa e Beta)
+# alpha = escala, beta = posição
+alpha <- (sqrt(6) / pi) * desvio
+beta <- media - (0.5772 * alpha) # 0.5772 é a const. Euler-Mascheroni
+
+print(paste("Alpha:", round(alpha, 2), "| Beta:", round(beta, 2)))
+
+# Gerar linha teórica para o gráfico
+prob_teorica <- seq(0.01, 0.995, length.out = 100)
+tr_teorico <- 1 / (1 - prob_teorica) # Gumbel usa prob de não excedência cumulativa
+
+# Equação dos quantis Gumbel: x(F) = beta - alpha * ln(-ln(F))
+q_teorica <- beta - alpha * log(-log(prob_teorica))
+
+curva_gumbel <- data.frame(Tr = tr_teorico, Vazao = q_teorica)
+```
+
+## 4.4 Visualização Profissional (ggplot2)
+Agora criamos o gráfico clássico de probabilidade hidrológica.
+
+<center> {width=70%} </center>
+
+
+```{r}
+ggplot() +
+  # 1. Pontos Observados
+  geom_point(data = dados_freq, aes(x = Tr_Empirico, y = Q_max), 
+             color = "blue", size = 2, alpha = 0.7) +
+  
+  # 2. Curva Teórica (Gumbel)
+  geom_line(data = curva_gumbel, aes(x = Tr, y = Vazao), 
+            color = "red", size = 1) +
+  
+  # 3. Formatação Logarítmica no Eixo X
+  scale_x_log10(breaks = c(2, 5, 10, 25, 50, 100), limits = c(1.1, 150)) +
+  annotation_logticks(sides = "b") +
+  
+  # 4. Textos e Tema
+  labs(
+    title = "Análise de Frequência de Cheias",
+    subtitle = "Estação Simulada | Ajuste Gumbel vs Observado",
+    x = "Período de Retorno (Anos)",
+    y = "Vazão Máxima (m³/s)",
+    caption = "Pontos Azuis: Weibull | Linha Vermelha: Gumbel Teórico"
+  ) +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank())
+```
+
+## 4.5 Conclusão
+Você completou o ciclo: importou, limpou, agregou e modelou estatisticamente dados hidrológicos no R!

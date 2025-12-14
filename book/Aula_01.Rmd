@@ -1,0 +1,72 @@
+---
+title: "Aula 01: Introdução ao R na Hidrologia"
+author: "Adaptado dos scripts originais"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+# 1. Introdução
+
+Bem-vindo ao curso de R aplicado à Hidrologia. Vamos começar entendendo como o R "pensa".
+Material de apoio sugerido: [R for Hydrologists (UNESCO)](https://www.unesco-floods.eu/r-software-in-hydrology/)
+
+<center>
+![Artwork by @allison_horst](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/r_first_then.png){width=60%}
+</center>
+
+## 1.1 R como Calculadora
+O comando básico do R é a execução direta de matemática.
+
+```{r calc}
+# Soma e Multiplicação
+10 + 20
+5 * 12
+
+# Funções Matemáticas
+sqrt(100)       # Raiz quadrada
+log10(1000)     # Log na base 10
+exp(1)          # Número de Euler (e)
+```
+
+## 1.2 Objetos e Atribuição
+
+Na hidrologia, raramente trabalhamos com números soltos. Guardamos eles em Objetos. Use <- para atribuir valores. 
+
+
+```{r}
+# Exemplo: Área de uma bacia e precipitação média
+area_bacia_km2 <- 500
+precipitacao_mm <- 1200
+```
+
+```{r}
+# Cálculo do Volume (conversão simplificada)
+# 1 mm = 1 litro/m2
+# 1 km2 = 1.000.000 m2
+volume_m3 <- area_bacia_km2 * 1e6 * (precipitacao_mm / 1000)
+
+print(paste("O volume total precipitado é:", volume_m3, "m3"))
+```
+
+## 1.3. Vetores (Séries de Dados)
+A unidade básica de dados no R é o vetor. Pense nele como uma coluna do Excel.
+
+```{r}
+# Série fictícia de vazões (m3/s)
+vazoes <- c(12.5, 14.2, 10.0, 55.4, 8.2, NA) # NA indica dado faltante
+
+# Estatísticas básicas
+mean(vazoes, na.rm = TRUE) # na.rm = TRUE ignora os NAs
+max(vazoes, na.rm = TRUE)
+min(vazoes, na.rm = TRUE)
+
+# Filtrando dados (Ex: vazões de cheia acima de 15 m3/s)
+cheias <- vazoes[vazoes > 15 & !is.na(vazoes)]
+print(cheias)
+```
+Dica: O R é case-sensitive. Vazao é diferente de vazao.
+

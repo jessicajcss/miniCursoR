@@ -1,0 +1,82 @@
+---
+title: "Aula 03: Ano Hidrológico e Estatísticas" 
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+
+# 3. O Ano Hidrológico e Estatísticas
+*Foco: Manipulação de datas e agregação (Baseado na Aula 3.R).*
+
+```{r, include=FALSE}
+library(tidyverse)
+library(lubridate)
+
+
+```
+
+<center>
+![Artwork by @allison_horst](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/group_by_ungroup.png){width=60%}
+</center>
+
+
+
+## 3.1 Definindo o Ano Hidrológico
+No Brasil, o ano civil (jan-dez) nem sempre representa o ciclo das chuvas. Muitas vezes usamos o ano hidrológico (ex: Outubro a Setembro).
+
+
+```{r}
+# Função para calcular Ano Hidrológico
+# Se o mês for >= Outubro (10), o ano hidrológico é o ano seguinte.
+obter_ano_hidrologico <- function(datas, inicio_mes = 10) {
+  datas <- as.Date(datas)
+  ano <- year(datas)
+  mes <- month(datas)
+  
+  # Lógica vetorial (ifelse)
+  ano_hidro <- ifelse(mes >= inicio_mes, ano + 1, ano)
+  return(ano_hidro)
+}
+```
+
+## 3.2 Agregação de Dados
+Vamos usar o group_by e summarise do pacote dplyr. É muito mais eficiente que usar loops for.
+
+<center> {width=70%} </center>
+
+```{r}
+# Gerando dados fictícios de 10 anos
+datas_seq <- seq(as.Date("2010-01-01"), as.Date("2020-12-31"), by="day")
+vazoes_sim <- rlnorm(length(datas_seq), meanlog=2, sdlog=0.5) # Log-normal simulação
+
+df_hidro <- data.frame(Data = datas_seq, Vazao = vazoes_sim) %>%
+  mutate(Ano_Hidro = obter_ano_hidrologico(Data, inicio_mes = 10))
+
+# Tabela Resumo Anual (Máximas, Mínimas e Médias)
+resumo_anual <- df_hidro %>%
+  group_by(Ano_Hidro) %>%
+  summarise(
+    Q_max = max(Vazao),
+    Q_min = min(Vazao),
+    Q_media = mean(Vazao),
+    Dias_com_dados = n()
+  )
+
+print(head(resumo_anual))
+```
+
+
+## 3.3 Visualização Simples
+
+```{r}
+ggplot(resumo_anual, aes(x = Ano_Hidro)) +
+  geom_line(aes(y = Q_max, color = "Máxima")) +
+  geom_line(aes(y = Q_media, color = "Média")) +
+  labs(y = "Vazão (m³/s)", title = "Estatísticas Anuais") +
+  theme_minimal()
+```
+
+

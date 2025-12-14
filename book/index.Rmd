@@ -1,0 +1,26 @@
+---
+title: "Curso Prático de Hidrologia no R"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+# Bem-vindo! 💧
+
+Este site reúne os tutoriais práticos para análise hidrológica usando R. Abaixo você encontra os links para cada módulo do curso.
+
+### Conteúdo Programático
+
+* **[Aula 01: Conceitos Básicos](Aula_01.html)**
+    * *Sintaxe, objetos e vetores.*
+* **[Aula 02: Importação e Tratamento](Aula_02.html)**
+    * *Lendo arquivos e limpando dados com Tidyverse.*
+* **[Aula 03: Estatísticas Hidrológicas](Aula_03.html)**
+    * *Ano hidrológico e agregação de dados.*
+* **[Aula 04: Análise de Frequência](Aula_04.html)**
+    * *Período de retorno e distribuição de Gumbel.*
+
+---
+*Material de apoio didático.*

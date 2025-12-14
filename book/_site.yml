@@ -1,0 +1,17 @@
+name: "Curso-Hidrologia-R"
+output_dir: "."
+navbar:
+  title: "Hidrologia com R"
+  left:
+    - text: "Início"
+      href: index.html
+    - text: "Aulas"
+      menu:
+        - text: "Aula 01: Introdução ao R na Hidrologia"
+          href: Aula_01.html
+        - text: "Aula 02: Importação e Limpeza de Dados Hidrológicos"
+          href: Aula_02.html
+        - text: "Aula 03: Ano Hidrológico e Estatísticas"
+          href: Aula_03.html
+        - text: "Aula 04: Análise de Frequência de Cheias"
+          href: Aula_04.html

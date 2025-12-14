@@ -1,0 +1,93 @@
+---
+title: "Aula 02: Importação e Limpeza de Dados Hidrológicos"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+# 2. Importação e Tratamento de Dados (Data Wrangling)
+*Foco: Ler arquivos, arrumar datas com `lubridate` e Web Scraping da ANA (Baseado na Aula 2.R).*
+
+```{r setup, message=FALSE, warning=FALSE}
+# Pacotes necessários (Instale-os se não tiver):
+
+# install.packages("XML")
+library(tidyverse)
+library(lubridate)
+library(XML) # Para o Web Scraping da ANA
+
+```
+
+## 2.1 O Jeito "Tidy" de lidar com dados
+Limpeza de dados (Data Wrangling) consome 80% do tempo. Usaremos o pacote dplyr e lubridate para facilitar.
+
+<center>
+![Artwork by @allison_horst](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_wrangling.png){width=60%}
+</center>
+
+
+## 2.2 Simulando/Importando Dados
+Nota: Se você tiver o arquivo 'Resumo_estacoes.txt', usaria read.table(). Aqui vamos criar um dataframe simulado para o exemplo funcionar.
+
+```{r}
+# Criando um conjunto de dados "sujo" para limparmos
+dados_brutos <- data.frame(
+  Cod_estacao = rep("60435000", 6),
+  DataHora = c("1978-05-12 12:00:00", "1978-05-13 12:00:00", 
+               "1978-05-14 12:00:00", "1978-05-15 12:00:00",
+               "1978-05-16 12:00:00", "1978-05-17 12:00:00"),
+  Vazao_String = c("2,53", "2,50", "2,50", "2,45", "Falha", "3,10") # Erros comuns: vírgula e texto
+)
+
+head(dados_brutos)
+```
+
+# 2.3 Limpeza (Pipeline)
+Vamos converter texto para número e arrumar a data.
+
+
+```{r}
+dados_limpos <- dados_brutos %>%
+  as_tibble() %>%
+  mutate(
+    # 1. Converter Data
+    Data = ymd_hms(DataHora), # Função do lubridate
+    Data_Dia = as.Date(Data),
+    
+    # 2. Corrigir Vazão (trocar vírgula por ponto e remover texto)
+    Vazao_Num = as.numeric(gsub(",", ".", Vazao_String))
+  )
+
+# Veja que o R introduziu NA onde havia texto ("Falha"), o que é correto
+print(dados_limpos)
+
+```
+
+# 2.4 Web Scraping da ANA (Avançado)
+Esta função foi adaptada do seu script original para baixar dados direto do servidor da ANA.
+
+```{r}
+# Função para baixar dados de vazão (Tipo 3)
+baixar_dados_ana <- function(cod_estacao, data_inicio="01/01/2000", data_fim=format(Sys.Date(), "%d/%m/%Y")){
+  
+  url_base <- paste0("[http://telemetriaws1.ana.gov.br/ServiceANA.asmx/DadosHidrometeorologicos](http://telemetriaws1.ana.gov.br/ServiceANA.asmx/DadosHidrometeorologicos)?",
+                     "codEstacao=", cod_estacao,
+                     "&dataInicio=", data_inicio,
+                     "&dataFim=", data_fim)
+  
+  message(paste("Baixando dados de:", cod_estacao))
+  
+  # Parser XML
+  xml_content <- xmlParse(url_base)
+  dados_xml <- xmlToDataFrame(getNodeSet(xml_content, "//DadosHidrometereologicos"))
+  
+  return(dados_xml)
+}
+
+# Exemplo de uso (Requer internet)
+# dados_ana_reais <- baixar_dados_ana("60435000", data_inicio = "01/01/2020")
+# head(dados_ana_reais)
+```
+
