@@ -1,12 +1,7 @@
 ---
 title: "Aula 01: Introdução ao R na Hidrologia"
-author: "Adaptado dos scripts originais"
 date: "`r Sys.Date()`"
-output: 
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
+output: html_document
 ---
 
 # 1. Introdução

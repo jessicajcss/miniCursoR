@@ -1,0 +1,50 @@
+/* 1. Importando uma fonte bonita do Google (Lato) */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+/* 2. Aplicando a fonte e o fundo claro */
+body {
+  background-color: #ffffff;
+  color: #333333; /* Cinza escuro suave, melhor que preto total */
+  font-family: 'Lato', sans-serif; /* Aqui a mágica acontece */
+  font-size: 18px;
+  line-height: 1.6; /* Mais espaço entre as linhas para facilitar a leitura */
+}
+
+/* 3. Cabeçalhos mais modernos */
+h1, h2, h3 {
+  color: #1a2e2e; /* Verde escuro do tema */
+  font-weight: 700; /* Negrito */
+  margin-top: 1.5em; /* Mais respiro acima dos títulos */
+}
+
+/* 4. Menu (Navbar) com estilo "Flat" e limpo */
+.navbar-default {
+  background-color: #1a2e2e; /* Fundo verde escuro */
+  border: none; /* Remove bordas feias */
+  border-radius: 0; /* Remove cantos arredondados (visual mais sério) */
+  font-family: 'Lato', sans-serif;
+}
+
+/* Links do menu */
+.navbar-default .navbar-nav > li > a {
+  color: #f0f0f0; /* Texto claro */
+  font-weight: 400;
+  text-transform: uppercase; /* Letras maiúsculas no menu (comum em blogs) */
+  letter-spacing: 1px; /* Espacinho entre letras */
+}
+
+/* Efeito ao passar o mouse no menu */
+.navbar-default .navbar-nav > li > a:hover {
+  color: #40e0d0; /* Turquesa ao passar o mouse */
+  background-color: transparent; /* Sem fundo colorido no hover */
+}
+
+/* Links no texto */
+a {
+  color: #008080;
+  text-decoration: none;
+  border-bottom: 1px dotted #008080; /* Sublinhado delicado */
+}
+a:hover {
+  border-bottom: 1px solid #008080;
+}

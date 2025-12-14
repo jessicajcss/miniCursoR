@@ -1,7 +1,10 @@
-name: "Curso-Hidrologia-R"
+name: "Curso-básico-R"
 output_dir: "."
+output:
+  html_document:
+    css: styles.css
 navbar:
-  title: "Hidrologia com R"
+  title: "MiniCurso de R"
   left:
     - text: "Início"
       href: index.html

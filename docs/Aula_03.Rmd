@@ -1,10 +1,6 @@
 ---
 title: "Aula 03: Ano Hidrológico e Estatísticas" 
-output: 
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
+output: html_document
 ---
 
 

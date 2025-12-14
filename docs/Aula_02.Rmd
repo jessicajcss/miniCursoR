@@ -1,10 +1,6 @@
 ---
 title: "Aula 02: Importação e Limpeza de Dados Hidrológicos"
-output: 
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
+output: html_document
 ---
 
 # 2. Importação e Tratamento de Dados (Data Wrangling)
