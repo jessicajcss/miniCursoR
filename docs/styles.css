@@ -48,3 +48,21 @@ a {
 a:hover {
   border-bottom: 1px solid #008080;
 }
+
+/* --- ESTILO DOS CHUNKS DE CÓDIGO (COM FORÇA EXTRA) --- */
+/* Forçar a cor no INPUT (Código) */
+div.main-container pre.sourceCode,
+div.main-container pre.r {
+  background-color: #e6f0ff !important; /* Azul claro */
+  border: 1px solid #b3d1ff !important;
+  color: #333 !important;
+}
+
+/* Forçar a cor no OUTPUT (Resultados) */
+/* Selecionamos 'pre' que NÃO tenha a classe sourceCode ou r */
+div.main-container pre:not(.sourceCode):not(.r) {
+  background-color: #f5f5f5 !important; /* Cinza claro */
+  border-left: 5px solid #666 !important;
+  color: #555 !important;
+  font-style: italic !important;
+}

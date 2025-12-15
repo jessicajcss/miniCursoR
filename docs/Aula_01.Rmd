@@ -6,7 +6,7 @@ output: html_document
 
 # 1. Introdução
 
-Bem-vindo ao curso de R aplicado à Hidrologia. Vamos começar entendendo como o R "pensa".
+Bem-vindo ao Minicurso de R. Vamos começar entendendo como o R "pensa".
 Material de apoio sugerido: [R for Hydrologists (UNESCO)](https://www.unesco-floods.eu/r-software-in-hydrology/)
 
 <center>
@@ -17,25 +17,229 @@ Material de apoio sugerido: [R for Hydrologists (UNESCO)](https://www.unesco-flo
 O comando básico do R é a execução direta de matemática.
 
 ```{r calc}
-# Soma e Multiplicação
+
+# Operações básicas
+
 10 + 20
+
 5 * 12
 
+1 + 2
+
+12 * 5
+
+12 ^ 2
+
+2 / 2
+
+11 %% 3
+
+sqrt(9)
+
+
 # Funções Matemáticas
+
 sqrt(100)       # Raiz quadrada
+
 log10(1000)     # Log na base 10
+
 exp(1)          # Número de Euler (e)
 ```
 
+
+
+### Operações vetoriais
+
+No R, operações com vetores são **vetorizadas** por padrão:
+
+```{r}
+2 * c(1, 2, 3, 4, 5)
+2 + c(1, 2, 3, 4, 5)
+
+# Entre vetores:
+
+c(1, 3, 5, 7) * c(2, 4, 6, 8)
+```
+
+
 ## 1.2 Objetos e Atribuição
 
-Na hidrologia, raramente trabalhamos com números soltos. Guardamos eles em Objetos. Use <- para atribuir valores. 
+### Classes de objetos
 
+```{r}
+class(2)
+class("texto")
+class(TRUE)
+class(2L)
+```
+
+
+---
+
+# 4. Principais tipos de dados
+
+## 4.1 Vetores
+
+```{r}
+x <- c(1, 2, 3, 4)
+x
+class(x)
+```
+
+
+```{r}
+#Vetores lógicos:
+
+y <- c(TRUE, FALSE, T, F)
+y
+
+```
+
+
+
+## 4.2 Fatores
+
+Fatores representam variáveis categóricas:
+
+
+```{r}
+x <- factor(c("normal", "atenção", "alerta", "inundação"))
+x
+table(x)
+```
+
+
+Fatores ordenados:
+
+
+```{r}
+y <- factor(x,
+levels = c("normal", "atenção", "alerta", "inundação"),
+ordered = TRUE)
+y
+y <= "alerta"
+
+```
+
+
+> 🎨 **Ilustração sugerida:** *Factors Explained* – excelente para evitar confusões comuns.
+
+---
+
+## 4.3 Coerção de tipos
+
+
+```{r}
+as.numeric(TRUE)
+as.character(10)
+as.numeric(c("1", "2", "3"))
+```
+
+
+⚠️ Nem toda coerção é possível:
+
+```{r}
+as.numeric(c("ola", "dia"))
+
+```
+
+
+---
+
+# 5. Indexação
+
+
+```{r}
+x <- 11:20
+x[1]
+x[c(1, 3, 5)]
+x[-2]
+```
+
+
+
+Indexação lógica:
+
+```{r}
+
+x[x > 15]
+```
+
+
+---
+
+# 6. Estruturas de dados
+
+## 6.1 Matrizes
+
+```{r}
+m <- matrix(1:9, nrow = 3)
+m
+m[1, 2]
+m[, 3]
+```
+
+
+
+## 6.2 Data frames
+
+```{r}
+DF <- data.frame(id = 1:3,
+classe = c("A", "B", "C"))
+DF
+class(DF)
+
+```
+
+
+## 6.3 Listas
+
+```{r}
+x <- list(1, "texto", DF, TRUE)
+x
+x[[3]]
+```
+
+
+Na hidrologia, raramente trabalhamos com números soltos. Guardamos eles em objetos. Use `<-` para atribuir valores. 
+
+
+
+# 7. Funções
+
+Funções são blocos reutilizáveis de código.
+
+
+
+### Criando uma função
+
+
+```{r}
+# Área de um retângulo
+area_ret <- function(lado1, lado2){
+  # O que a sua função faz
+  area <- lado1*lado2
+  
+  # O que a função retorna
+  return(area)
+}
+area_ret(5)
+
+area_ret(5, 10)
+```
 
 ```{r}
 # Exemplo: Área de uma bacia e precipitação média
 area_bacia_km2 <- 500
 precipitacao_mm <- 1200
+```
+
+O R é **case sensitive**:
+
+
+```{r}
+X <- 10
+x
 ```
 
 ```{r}
@@ -65,3 +269,97 @@ print(cheias)
 ```
 Dica: O R é case-sensitive. Vazao é diferente de vazao.
 
+
+
+
+
+---
+
+# 8. Estruturas condicionais
+
+```{r}
+x <- 10
+ifelse(x < 100,
+"x é menor que 100",
+"x é maior ou igual a 100")
+
+```
+
+
+Uso de `if` simples:
+
+```{r}
+x <- 3.7
+if(class(x) != "integer"){
+x <- as.integer(round(x))
+}
+x
+```
+
+
+
+---
+
+# 9. Loops
+
+## 9.1 Loop `for`
+
+```{r}
+for(i in 1:5){
+print(i)
+}
+```
+
+
+
+Aplicação prática:
+
+```{r}
+vetor_lado1 <- c(10, 20, 30)
+vetor_lado2 <- c(5, 10, 15)
+
+for(i in 1:length(vetor_lado1)){
+print(area_ret(vetor_lado1[i], vetor_lado2[i]))
+}
+```
+
+
+
+## 9.2 Loop `while`
+
+
+```{r}
+
+i <- 0
+while(i <= 5){
+print(i)
+i <- i + 1
+}
+```
+
+
+---
+
+# 10. Exercícios
+
+1. Crie um vetor com os números de 1 a 20 e selecione apenas os pares.
+2. Crie uma função que calcule a área de um círculo.
+3. Crie um `data.frame` com três colunas: ano, mês e vazão.
+4. Use um loop `for` para calcular a área de vários retângulos.
+
+
+
+
+
+---
+
+# Próxima aula
+
+➡️ **Aula 2 – Obtenção de dados hidrológicos e webservices (ANA)**
+
+Vamos aprender a:
+
+* Ler arquivos externos;
+* Acessar dados online;
+* Trabalhar com datas;
+* Criar funções aplicadas à hidrologia.

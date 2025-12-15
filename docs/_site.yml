@@ -2,7 +2,15 @@ name: "Curso-básico-R"
 output_dir: "."
 output:
   html_document:
+    theme: flatly
+    highlight: textmate
     css: styles.css
+    #code_folding: hide   # hide the print
+    toc: true        # Ativa o sumário
+    toc_float:       # Configurações da flutuação
+      collapsed: false # O menu começa aberto? (false = sim, mostra tudo)
+      smooth_scroll: true # Desliza suavemente ao clicar
+    toc_depth: 3     # Pega até o nível 3 (### Título)
 navbar:
   title: "MiniCurso de R"
   left:

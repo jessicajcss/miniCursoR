@@ -1,15 +1,6 @@
-# https://www.unesco-floods.eu/r-software-in-hydrology/
-# https://rpubs.com/hfairwea/ebook
-# https://biggslab.sdsu.edu/hidrologia-em-r-portugues/
-
-# https://www.javedali.net/post/r-resources-for-hydrologists/
-# https://github.com/hydrosoc/rhydro_EGU22
-
-# https://ecorepsci.github.io/reproducible-science/version-control-git.html
-# https://allisonhorst.github.io/qmss-r-teaching-tools/slides/qmss_r_teaching_slides.html#44
+# https://posit.cloud/learn/recipes # comandos básicos
 
 
-# AWESOME: https://github.com/allisonhorst/esm-206-2018
 ################################
 # Gerenciamento de arquivos ----
 ################################
@@ -235,4 +226,3 @@ TRUE & TRUE | FALSE & FALSE
 
 
 # A ordem de prioridade de operadores lógicos é: 1º: ! 2º: & 3º: | 
-  

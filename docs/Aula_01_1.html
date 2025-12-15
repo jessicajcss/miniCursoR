@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="" />
+
+<meta name="date" content="2025-12-14" />
+
+<title>Curso de Introdução ao R</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MiniCurso de R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Início</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Aulas
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Aula_01.html">Aula 01: Introdução ao R na Hidrologia</a>
+    </li>
+    <li>
+      <a href="Aula_02.html">Aula 02: Importação e Limpeza de Dados Hidrológicos</a>
+    </li>
+    <li>
+      <a href="Aula_03.html">Aula 03: Ano Hidrológico e Estatísticas</a>
+    </li>
+    <li>
+      <a href="Aula_04.html">Aula 04: Análise de Frequência de Cheias</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Curso de Introdução ao R</h1>
+<h4 class="author"></h4>
+<h4 class="date">2025-12-14</h4>
+
+</div>
+
+
+<div id="configuração-para-esconder-resultados-spoiler"
+class="section level1">
+<h1>— Configuração para esconder resultados (Spoiler) —</h1>
+<p>hook_output_padrao &lt;- knitr::knit_hooks$get(“output”)</p>
+knitr::knit_hooks<span class="math inline">\(set(output = function(x,
+options) {
+  if (!is.null(options\)</span>spoiler) &amp;&amp; options$spoiler) { #
+A MUDANÇA ESTÁ NA LINHA ABAIXO (style=…) paste0(“
+<details>
+<summary style="text-align: right; cursor: pointer; color: #006666; font-weight: italic;">
+Run
+</summary>
+“, hook_output_padrao(x, options),”
+</details>
+<p>“) } else { hook_output_padrao(x, options) } })</p>
+<pre><code>
+# Objetivos da aula
+
+Ao final desta aula, você deverá ser capaz de:
+
+* Entender o que é o R e como ele funciona;
+* Navegar entre diretórios e arquivos;
+* Executar operações matemáticas básicas;
+* Criar e manipular objetos no R;
+* Reconhecer os principais tipos de dados;
+* Escrever funções simples e usar estruturas de controle.
+
+&gt; 🎨 **Ilustração sugerida (Allison Horst):** *RStudio IDE Overview* – ótima para apresentar o ambiente de trabalho.
+
+---
+
+# 1. Primeiros passos no R
+
+## 1.1 Diretório de trabalho
+
+O **diretório de trabalho** é a pasta onde o R irá procurar arquivos e salvar resultados.
+
+
+</code></pre>
+<div
+id="cusersair_ponedrive---ufpr.brweek_tempspostdoc_udesccurso_rminicursordocs"
+class="section level2">
+<h2>[1] “C:/Users/air_p/OneDrive -
+ufpr.br/week_temps/postdoc_UDESC/Curso_R/miniCursoR/docs”</h2>
+<pre><code>
+Para listar os arquivos do diretório atual:
+
+</code></pre>
+</div>
+<div id="site.yml-aula_01.html-aula_01.rmd-aula_01_1.html"
+class="section level2">
+<h2>[1] “_site.yml” “Aula_01.html” “Aula_01.Rmd” “Aula_01_1.html”</h2>
+</div>
+<div id="aula_01_1.rmd-aula_02.html-aula_02.rmd-aula_03.html"
+class="section level2">
+<h2>[5] “Aula_01_1.Rmd” “Aula_02.html” “Aula_02.Rmd” “Aula_03.html”</h2>
+</div>
+<div id="aula_03.rmd-aula_03_files-aula_04.html-aula_04.rmd"
+class="section level2">
+<h2>[9] “Aula_03.Rmd” “Aula_03_files” “Aula_04.html” “Aula_04.Rmd”</h2>
+</div>
+<div id="aula_04_files-index.html-index.rmd-site_libs"
+class="section level2">
+<h2>[13] “Aula_04_files” “index.html” “index.Rmd” “site_libs”</h2>
+</div>
+<div id="styles.css" class="section level2">
+<h2>[17] “styles.css”</h2>
+<pre><code></code></pre>
+</div>
+<div id="site.yml-aula_01.html-aula_01.rmd-aula_01_1.html-1"
+class="section level2">
+<h2>[1] “_site.yml” “Aula_01.html” “Aula_01.Rmd” “Aula_01_1.html”</h2>
+</div>
+<div id="aula_01_1.rmd-aula_02.html-aula_02.rmd-aula_03.html-1"
+class="section level2">
+<h2>[5] “Aula_01_1.Rmd” “Aula_02.html” “Aula_02.Rmd” “Aula_03.html”</h2>
+</div>
+<div id="aula_03.rmd-aula_03_files-aula_04.html-aula_04.rmd-1"
+class="section level2">
+<h2>[9] “Aula_03.Rmd” “Aula_03_files” “Aula_04.html” “Aula_04.Rmd”</h2>
+</div>
+<div id="aula_04_files-index.html-index.rmd-site_libs-1"
+class="section level2">
+<h2>[13] “Aula_04_files” “index.html” “index.Rmd” “site_libs”</h2>
+</div>
+<div id="styles.css-1" class="section level2">
+<h2>[17] “styles.css”</h2>
+<pre><code>
+Para definir manualmente um diretório de trabalho:
+
+
+
+&gt; ⚠️ Dica didática: prefira usar **Projetos do RStudio** para evitar problemas com caminhos.
+
+---
+
+
+## 1.2 Executando scripts R
+
+Um arquivo com extensão `.R` pode ser executado com a função `source()`:
+
+
+
+Isso é útil para organizar códigos longos ou reutilizáveis.
+
+---
+
+# 2. O R como calculadora
+
+O R funciona como uma calculadora poderosa:
+
+</code></pre>
+</div>
+<div id="section" class="section level2">
+<h2>[1] 3</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-1" class="section level2">
+<h2>[1] 60</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-2" class="section level2">
+<h2>[1] 144</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-3" class="section level2">
+<h2>[1] 1</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-4" class="section level2">
+<h2>[1] 2</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-5" class="section level2">
+<h2>[1] 3</h2>
+<pre><code>
+### Operações vetoriais
+
+No R, operações com vetores são **vetorizadas** por padrão:
+
+</code></pre>
+</div>
+<div id="section-6" class="section level2">
+<h2>[1] 2 4 6 8 10</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-7" class="section level2">
+<h2>[1] 3 4 5 6 7</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-8" class="section level2">
+<h2>[1] 2 12 30 56</h2>
+<pre><code>
+
+
+
+&gt; 🎨 **Ilustração sugerida:** *Vector Recycling* – para explicar reciclagem de vetores.
+
+---
+
+# 3. Objetos e variáveis
+
+</code></pre>
+</div>
+<div id="section-9" class="section level2">
+<h2>[1] 2</h2>
+<pre><code>
+O R é **case sensitive**:
+
+
+</code></pre>
+</div>
+<div id="section-10" class="section level2">
+<h2>[1] 2</h2>
+<pre><code>
+### Classes de objetos
+
+
+</code></pre>
+</div>
+<div id="numeric" class="section level2">
+<h2>[1] “numeric”</h2>
+<pre><code></code></pre>
+</div>
+<div id="character" class="section level2">
+<h2>[1] “character”</h2>
+<pre><code></code></pre>
+</div>
+<div id="logical" class="section level2">
+<h2>[1] “logical”</h2>
+<pre><code></code></pre>
+</div>
+<div id="integer" class="section level2">
+<h2>[1] “integer”</h2>
+<pre><code>
+
+
+---
+
+# 4. Principais tipos de dados
+
+## 4.1 Vetores
+
+
+
+
+</code></pre>
+</div>
+<div id="section-11" class="section level2">
+<h2>[1] 1 2 3 4</h2>
+<pre><code></code></pre>
+</div>
+<div id="numeric-1" class="section level2">
+<h2>[1] “numeric”</h2>
+<pre><code>
+
+</code></pre>
+</div>
+<div id="true-false-true-false" class="section level2">
+<h2>[1] TRUE FALSE TRUE FALSE</h2>
+<pre><code>
+
+
+## 4.2 Fatores
+
+Fatores representam variáveis categóricas:
+
+
+</code></pre>
+</div>
+<div id="normal-atenção-alerta-inundação" class="section level2">
+<h2>[1] normal atenção alerta inundação</h2>
+</div>
+<div id="levels-alerta-atenção-inundação-normal" class="section level2">
+<h2>Levels: alerta atenção inundação normal</h2>
+<pre><code></code></pre>
+</div>
+<div id="x" class="section level2">
+<h2>x</h2>
+</div>
+<div id="alerta-atenção-inundação-normal" class="section level2">
+<h2>alerta atenção inundação normal</h2>
+</div>
+<div id="section-12" class="section level2">
+<h2>1 1 1 1</h2>
+<pre><code>
+
+Fatores ordenados:
+
+
+</code></pre>
+</div>
+<div id="normal-atenção-alerta-inundação-1" class="section level2">
+<h2>[1] normal atenção alerta inundação</h2>
+</div>
+<div id="levels-normal-atenção-alerta-inundação" class="section level2">
+<h2>Levels: normal &lt; atenção &lt; alerta &lt; inundação</h2>
+<pre><code></code></pre>
+</div>
+<div id="true-true-true-false" class="section level2">
+<h2>[1] TRUE TRUE TRUE FALSE</h2>
+<pre><code>
+
+&gt; 🎨 **Ilustração sugerida:** *Factors Explained* – excelente para evitar confusões comuns.
+
+---
+
+## 4.3 Coerção de tipos
+
+
+</code></pre>
+</div>
+<div id="section-13" class="section level2">
+<h2>[1] 1</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-14" class="section level2">
+<h2>[1] “10”</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-15" class="section level2">
+<h2>[1] 1 2 3</h2>
+<pre><code>
+
+⚠️ Nem toda coerção é possível:
+
+</code></pre>
+</div>
+<div id="na-na" class="section level2">
+<h2>[1] NA NA</h2>
+<pre><code>
+
+---
+
+# 5. Indexação
+
+
+</code></pre>
+</div>
+<div id="section-16" class="section level2">
+<h2>[1] 11</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-17" class="section level2">
+<h2>[1] 11 13 15</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-18" class="section level2">
+<h2>[1] 11 13 14 15 16 17 18 19 20</h2>
+<pre><code>
+
+
+Indexação lógica:
+
+</code></pre>
+</div>
+<div id="section-19" class="section level2">
+<h2>[1] 16 17 18 19 20</h2>
+<pre><code>
+
+---
+
+# 6. Estruturas de dados
+
+## 6.1 Matrizes
+
+</code></pre>
+</div>
+<div id="section-20" class="section level2">
+<h2>[,1] [,2] [,3]</h2>
+</div>
+<div id="section-21" class="section level2">
+<h2>[1,] 1 4 7</h2>
+</div>
+<div id="section-22" class="section level2">
+<h2>[2,] 2 5 8</h2>
+</div>
+<div id="section-23" class="section level2">
+<h2>[3,] 3 6 9</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-24" class="section level2">
+<h2>[1] 4</h2>
+<pre><code></code></pre>
+</div>
+<div id="section-25" class="section level2">
+<h2>[1] 7 8 9</h2>
+<pre><code>
+
+
+## 6.2 Data frames
+
+</code></pre>
+</div>
+<div id="id-classe" class="section level2">
+<h2>id classe</h2>
+</div>
+<div id="a" class="section level2">
+<h2>1 1 A</h2>
+</div>
+<div id="b" class="section level2">
+<h2>2 2 B</h2>
+</div>
+<div id="c" class="section level2">
+<h2>3 3 C</h2>
+<pre><code></code></pre>
+</div>
+<div id="data.frame" class="section level2">
+<h2>[1] “data.frame”</h2>
+<pre><code>
+
+## 6.3 Listas
+
+</code></pre>
+</div>
+<div id="section-26" class="section level2">
+<h2>[[1]]</h2>
+</div>
+<div id="section-27" class="section level2">
+<h2>[1] 1</h2>
+</div>
+<div id="section-28" class="section level2">
+<h2></h2>
+</div>
+<div id="section-29" class="section level2">
+<h2>[[2]]</h2>
+</div>
+<div id="texto" class="section level2">
+<h2>[1] “texto”</h2>
+</div>
+<div id="section-30" class="section level2">
+<h2></h2>
+</div>
+<div id="section-31" class="section level2">
+<h2>[[3]]</h2>
+</div>
+<div id="id-classe-1" class="section level2">
+<h2>id classe</h2>
+</div>
+<div id="a-1" class="section level2">
+<h2>1 1 A</h2>
+</div>
+<div id="b-1" class="section level2">
+<h2>2 2 B</h2>
+</div>
+<div id="c-1" class="section level2">
+<h2>3 3 C</h2>
+</div>
+<div id="section-32" class="section level2">
+<h2></h2>
+</div>
+<div id="section-33" class="section level2">
+<h2>[[4]]</h2>
+</div>
+<div id="true" class="section level2">
+<h2>[1] TRUE</h2>
+<pre><code></code></pre>
+</div>
+<div id="id-classe-2" class="section level2">
+<h2>id classe</h2>
+</div>
+<div id="a-2" class="section level2">
+<h2>1 1 A</h2>
+</div>
+<div id="b-2" class="section level2">
+<h2>2 2 B</h2>
+</div>
+<div id="c-2" class="section level2">
+<h2>3 3 C</h2>
+<pre><code>
+
+
+&gt; 🎨 **Ilustração sugerida:** *Data Structures in R* (Allison Horst).
+
+---
+
+# 7. Funções
+
+Funções são blocos reutilizáveis de código.
+
+
+
+
+</code></pre>
+</div>
+<div id="section-34" class="section level2">
+<h2>[1] 50</h2>
+<pre><code>
+
+
+---
+
+# 8. Estruturas condicionais
+
+</code></pre>
+</div>
+<div id="x-é-menor-que-100" class="section level2">
+<h2>[1] “x é menor que 100”</h2>
+<pre><code>
+
+Uso de `if` simples:
+
+</code></pre>
+</div>
+<div id="section-35" class="section level2">
+<h2>[1] 4</h2>
+<pre><code>
+
+
+---
+
+# 9. Loops
+
+## 9.1 Loop `for`
+
+</code></pre>
+</div>
+<div id="section-36" class="section level2">
+<h2>[1] 1</h2>
+</div>
+<div id="section-37" class="section level2">
+<h2>[1] 2</h2>
+</div>
+<div id="section-38" class="section level2">
+<h2>[1] 3</h2>
+</div>
+<div id="section-39" class="section level2">
+<h2>[1] 4</h2>
+</div>
+<div id="section-40" class="section level2">
+<h2>[1] 5</h2>
+<pre><code>
+
+
+Aplicação prática:
+
+</code></pre>
+</div>
+<div id="section-41" class="section level2">
+<h2>[1] 50</h2>
+</div>
+<div id="section-42" class="section level2">
+<h2>[1] 200</h2>
+</div>
+<div id="section-43" class="section level2">
+<h2>[1] 450</h2>
+<pre><code>
+
+
+## 9.2 Loop `while`
+
+
+</code></pre>
+</div>
+<div id="section-44" class="section level2">
+<h2>[1] 0</h2>
+</div>
+<div id="section-45" class="section level2">
+<h2>[1] 1</h2>
+</div>
+<div id="section-46" class="section level2">
+<h2>[1] 2</h2>
+</div>
+<div id="section-47" class="section level2">
+<h2>[1] 3</h2>
+</div>
+<div id="section-48" class="section level2">
+<h2>[1] 4</h2>
+</div>
+<div id="section-49" class="section level2">
+<h2>[1] 5</h2>
+<p>```</p>
+<hr />
+</div>
+</div>
+<div id="exercícios" class="section level1">
+<h1>10. Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li>Crie um vetor com os números de 1 a 20 e selecione apenas os
+pares.</li>
+<li>Crie uma função que calcule a área de um círculo.</li>
+<li>Crie um <code>data.frame</code> com três colunas: ano, mês e
+vazão.</li>
+<li>Use um loop <code>for</code> para calcular a área de vários
+retângulos.</li>
+</ol>
+<hr />
+</div>
+<div id="próxima-aula" class="section level1">
+<h1>Próxima aula</h1>
+<p>➡️ <strong>Aula 2 – Obtenção de dados hidrológicos e webservices
+(ANA)</strong></p>
+<p>Vamos aprender a:</p>
+<ul>
+<li>Ler arquivos externos;</li>
+<li>Acessar dados online;</li>
+<li>Trabalhar com datas;</li>
+<li>Criar funções aplicadas à hidrologia.</li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

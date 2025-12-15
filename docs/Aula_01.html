@@ -17,7 +17,7 @@
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +30,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">
@@ -221,6 +224,75 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
 
 </head>
 
@@ -228,6 +300,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -288,8 +370,8 @@ $(document).ready(function () {
 
 <div id="introdução" class="section level1">
 <h1>1. Introdução</h1>
-<p>Bem-vindo ao curso de R aplicado à Hidrologia. Vamos começar
-entendendo como o R “pensa”. Material de apoio sugerido: <a
+<p>Bem-vindo ao Minicurso de R. Vamos começar entendendo como o R
+“pensa”. Material de apoio sugerido: <a
 href="https://www.unesco-floods.eu/r-software-in-hydrology/">R for
 Hydrologists (UNESCO)</a></p>
 <center>
@@ -304,26 +386,213 @@ class="citation">@allison_horst</span></div>
 <div id="r-como-calculadora" class="section level2">
 <h2>1.1 R como Calculadora</h2>
 <p>O comando básico do R é a execução direta de matemática.</p>
-<pre class="r"><code># Soma e Multiplicação
+<pre class="r"><code># Operações básicas
+
 10 + 20</code></pre>
 <pre><code>## [1] 30</code></pre>
 <pre class="r"><code>5 * 12</code></pre>
 <pre><code>## [1] 60</code></pre>
+<pre class="r"><code>1 + 2</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>12 * 5</code></pre>
+<pre><code>## [1] 60</code></pre>
+<pre class="r"><code>12 ^ 2</code></pre>
+<pre><code>## [1] 144</code></pre>
+<pre class="r"><code>2 / 2</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>11 %% 3</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>sqrt(9)</code></pre>
+<pre><code>## [1] 3</code></pre>
 <pre class="r"><code># Funções Matemáticas
+
 sqrt(100)       # Raiz quadrada</code></pre>
 <pre><code>## [1] 10</code></pre>
 <pre class="r"><code>log10(1000)     # Log na base 10</code></pre>
 <pre><code>## [1] 3</code></pre>
 <pre class="r"><code>exp(1)          # Número de Euler (e)</code></pre>
 <pre><code>## [1] 2.718282</code></pre>
+<div id="operações-vetoriais" class="section level3">
+<h3>Operações vetoriais</h3>
+<p>No R, operações com vetores são <strong>vetorizadas</strong> por
+padrão:</p>
+<pre class="r"><code>2 * c(1, 2, 3, 4, 5)</code></pre>
+<pre><code>## [1]  2  4  6  8 10</code></pre>
+<pre class="r"><code>2 + c(1, 2, 3, 4, 5)</code></pre>
+<pre><code>## [1] 3 4 5 6 7</code></pre>
+<pre class="r"><code># Entre vetores:
+
+c(1, 3, 5, 7) * c(2, 4, 6, 8)</code></pre>
+<pre><code>## [1]  2 12 30 56</code></pre>
+</div>
 </div>
 <div id="objetos-e-atribuição" class="section level2">
 <h2>1.2 Objetos e Atribuição</h2>
+<div id="classes-de-objetos" class="section level3">
+<h3>Classes de objetos</h3>
+<pre class="r"><code>class(2)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>class(&quot;texto&quot;)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>class(TRUE)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre class="r"><code>class(2L)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<hr />
+</div>
+</div>
+</div>
+<div id="principais-tipos-de-dados" class="section level1">
+<h1>4. Principais tipos de dados</h1>
+<div id="vetores" class="section level2">
+<h2>4.1 Vetores</h2>
+<pre class="r"><code>x &lt;- c(1, 2, 3, 4)
+x</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+<pre class="r"><code>class(x)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>#Vetores lógicos:
+
+y &lt;- c(TRUE, FALSE, T, F)
+y</code></pre>
+<pre><code>## [1]  TRUE FALSE  TRUE FALSE</code></pre>
+</div>
+<div id="fatores" class="section level2">
+<h2>4.2 Fatores</h2>
+<p>Fatores representam variáveis categóricas:</p>
+<pre class="r"><code>x &lt;- factor(c(&quot;normal&quot;, &quot;atenção&quot;, &quot;alerta&quot;, &quot;inundação&quot;))
+x</code></pre>
+<pre><code>## [1] normal    atenção   alerta    inundação
+## Levels: alerta atenção inundação normal</code></pre>
+<pre class="r"><code>table(x)</code></pre>
+<pre><code>## x
+##    alerta   atenção inundação    normal 
+##         1         1         1         1</code></pre>
+<p>Fatores ordenados:</p>
+<pre class="r"><code>y &lt;- factor(x,
+levels = c(&quot;normal&quot;, &quot;atenção&quot;, &quot;alerta&quot;, &quot;inundação&quot;),
+ordered = TRUE)
+y</code></pre>
+<pre><code>## [1] normal    atenção   alerta    inundação
+## Levels: normal &lt; atenção &lt; alerta &lt; inundação</code></pre>
+<pre class="r"><code>y &lt;= &quot;alerta&quot;</code></pre>
+<pre><code>## [1]  TRUE  TRUE  TRUE FALSE</code></pre>
+<blockquote>
+<p>🎨 <strong>Ilustração sugerida:</strong> <em>Factors Explained</em> –
+excelente para evitar confusões comuns.</p>
+</blockquote>
+<hr />
+</div>
+<div id="coerção-de-tipos" class="section level2">
+<h2>4.3 Coerção de tipos</h2>
+<pre class="r"><code>as.numeric(TRUE)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>as.character(10)</code></pre>
+<pre><code>## [1] &quot;10&quot;</code></pre>
+<pre class="r"><code>as.numeric(c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;))</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
+<p>⚠️ Nem toda coerção é possível:</p>
+<pre class="r"><code>as.numeric(c(&quot;ola&quot;, &quot;dia&quot;))</code></pre>
+<pre><code>## Warning: NAs introduzidos por coerção</code></pre>
+<pre><code>## [1] NA NA</code></pre>
+<hr />
+</div>
+</div>
+<div id="indexação" class="section level1">
+<h1>5. Indexação</h1>
+<pre class="r"><code>x &lt;- 11:20
+x[1]</code></pre>
+<pre><code>## [1] 11</code></pre>
+<pre class="r"><code>x[c(1, 3, 5)]</code></pre>
+<pre><code>## [1] 11 13 15</code></pre>
+<pre class="r"><code>x[-2]</code></pre>
+<pre><code>## [1] 11 13 14 15 16 17 18 19 20</code></pre>
+<p>Indexação lógica:</p>
+<pre class="r"><code>x[x &gt; 15]</code></pre>
+<pre><code>## [1] 16 17 18 19 20</code></pre>
+<hr />
+</div>
+<div id="estruturas-de-dados" class="section level1">
+<h1>6. Estruturas de dados</h1>
+<div id="matrizes" class="section level2">
+<h2>6.1 Matrizes</h2>
+<pre class="r"><code>m &lt;- matrix(1:9, nrow = 3)
+m</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9</code></pre>
+<pre class="r"><code>m[1, 2]</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>m[, 3]</code></pre>
+<pre><code>## [1] 7 8 9</code></pre>
+</div>
+<div id="data-frames" class="section level2">
+<h2>6.2 Data frames</h2>
+<pre class="r"><code>DF &lt;- data.frame(id = 1:3,
+classe = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
+DF</code></pre>
+<pre><code>##   id classe
+## 1  1      A
+## 2  2      B
+## 3  3      C</code></pre>
+<pre class="r"><code>class(DF)</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+</div>
+<div id="listas" class="section level2">
+<h2>6.3 Listas</h2>
+<pre class="r"><code>x &lt;- list(1, &quot;texto&quot;, DF, TRUE)
+x</code></pre>
+<pre><code>## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] &quot;texto&quot;
+## 
+## [[3]]
+##   id classe
+## 1  1      A
+## 2  2      B
+## 3  3      C
+## 
+## [[4]]
+## [1] TRUE</code></pre>
+<pre class="r"><code>x[[3]]</code></pre>
+<pre><code>##   id classe
+## 1  1      A
+## 2  2      B
+## 3  3      C</code></pre>
 <p>Na hidrologia, raramente trabalhamos com números soltos. Guardamos
-eles em Objetos. Use &lt;- para atribuir valores.</p>
+eles em objetos. Use <code>&lt;-</code> para atribuir valores.</p>
+</div>
+</div>
+<div id="funções" class="section level1">
+<h1>7. Funções</h1>
+<p>Funções são blocos reutilizáveis de código.</p>
+<pre class="r"><code>area_ret &lt;- function(lado1, lado2){
+area &lt;- lado1 * lado2
+return(area)
+}</code></pre>
 <pre class="r"><code># Exemplo: Área de uma bacia e precipitação média
 area_bacia_km2 &lt;- 500
 precipitacao_mm &lt;- 1200</code></pre>
+<p>O R é <strong>case sensitive</strong>:</p>
+<pre class="r"><code>X &lt;- 10
+x</code></pre>
+<pre><code>## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] &quot;texto&quot;
+## 
+## [[3]]
+##   id classe
+## 1  1      A
+## 2  2      B
+## 3  3      C
+## 
+## [[4]]
+## [1] TRUE</code></pre>
 <pre class="r"><code># Cálculo do Volume (conversão simplificada)
 # 1 mm = 1 litro/m2
 # 1 km2 = 1.000.000 m2
@@ -331,7 +600,6 @@ volume_m3 &lt;- area_bacia_km2 * 1e6 * (precipitacao_mm / 1000)
 
 print(paste(&quot;O volume total precipitado é:&quot;, volume_m3, &quot;m3&quot;))</code></pre>
 <pre><code>## [1] &quot;O volume total precipitado é: 6e+08 m3&quot;</code></pre>
-</div>
 <div id="vetores-séries-de-dados" class="section level2">
 <h2>1.3. Vetores (Séries de Dados)</h2>
 <p>A unidade básica de dados no R é o vetor. Pense nele como uma coluna
@@ -351,11 +619,83 @@ cheias &lt;- vazoes[vazoes &gt; 15 &amp; !is.na(vazoes)]
 print(cheias)</code></pre>
 <pre><code>## [1] 55.4</code></pre>
 <p>Dica: O R é case-sensitive. Vazao é diferente de vazao.</p>
+<pre class="r"><code>area_ret(5, 10)</code></pre>
+<pre><code>## [1] 50</code></pre>
+<hr />
 </div>
 </div>
+<div id="estruturas-condicionais" class="section level1">
+<h1>8. Estruturas condicionais</h1>
+<pre class="r"><code>x &lt;- 10
+ifelse(x &lt; 100,
+&quot;x é menor que 100&quot;,
+&quot;x é maior ou igual a 100&quot;)</code></pre>
+<pre><code>## [1] &quot;x é menor que 100&quot;</code></pre>
+<p>Uso de <code>if</code> simples:</p>
+<pre class="r"><code>x &lt;- 3.7
+if(class(x) != &quot;integer&quot;){
+x &lt;- as.integer(round(x))
+}
+x</code></pre>
+<pre><code>## [1] 4</code></pre>
+<hr />
+</div>
+<div id="loops" class="section level1">
+<h1>9. Loops</h1>
+<div id="loop-for" class="section level2">
+<h2>9.1 Loop <code>for</code></h2>
+<pre class="r"><code>for(i in 1:5){
+print(i)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+<p>Aplicação prática:</p>
+<pre class="r"><code>vetor_lado1 &lt;- c(10, 20, 30)
+vetor_lado2 &lt;- c(5, 10, 15)
+
+for(i in 1:length(vetor_lado1)){
+print(area_ret(vetor_lado1[i], vetor_lado2[i]))
+}</code></pre>
+<pre><code>## [1] 50
+## [1] 200
+## [1] 450</code></pre>
+</div>
+<div id="loop-while" class="section level2">
+<h2>9.2 Loop <code>while</code></h2>
+<pre class="r"><code>i &lt;- 0
+while(i &lt;= 5){
+print(i)
+i &lt;- i + 1
+}</code></pre>
+<pre><code>## [1] 0
+## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+<hr />
+</div>
+</div>
+<div id="exercícios" class="section level1">
+<h1>10. Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li>Crie um vetor com os números de 1 a 20 e selecione apenas os
+pares.</li>
+<li>Crie uma função que calcule a área de um círculo.</li>
+<li>Crie um <code>data.frame</code> com três colunas: ano, mês e
+vazão.</li>
+<li>Use um loop <code>for</code> para calcular a área de vários
+retângulos.</li>
+</ol>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -388,6 +728,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
