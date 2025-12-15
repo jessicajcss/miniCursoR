@@ -9,10 +9,17 @@
 ####-- Caminho --####
 
 # Qual o diretório em que você está trabalhando?
+
 getwd() 
 
 # Definir um caminho:
 path <- "./" # '<-' ou '=' podem ser usados, mas '<-' funciona exclusivamente para atribuição de objetos (variáveis)
+
+path <- "C:/Users/jessi/OneDrive/Desktop/miniCursoR/data"
+
+df <- read.csv("./data/exer/National Parks Visitation Data.csv")
+
+setwd(path)
 
 # Chamar e rodar um script R (*.R):
 source(path)
@@ -21,6 +28,8 @@ source(path)
 
 
 ####-- Arquivos --####
+path <- "C:/Users/jessi/OneDrive/Desktop/miniCursoR/data"
+
 
 # O que há nesse diretório? Quais arquivos?
 dir() 
@@ -30,11 +39,12 @@ list.files()
 list.files(path, include.dirs = TRUE)
 
 # Esse caminho é um arquivo '-f' ou uma pasta '-d'?
-file_test('-d', path)
+file_test('-f', path)
 
 # Ler/Salvar um arquivo .csv:
-read.csv(path_to_csv_file)
-write.csv(df, path_to_csv_file)
+read.csv("./data/exer/National Parks Visitation Data.csv")
+
+write.csv(df, "./output/dados_parques.csv")
 
 
 
@@ -52,6 +62,7 @@ write.csv(df, path_to_csv_file)
 #! O R é case sensitive, i.e., faz distinção entre letras maiúsculas e minúsculas;
 #! Caracteres especiais, espaços e início numérico para os nomes das variáveis ou funções não são permitidos;
 #! Não é recomendada a utilização de acentuação.
+
 
 
 # ATALHOS ----
@@ -73,8 +84,26 @@ class(texto)
 is.character(texto)
 
 
+
+# Lista
+ordem <- c('baixo', 'médio', 'alto')
+
+
+ordem[2]
+
+ordem <- factor(c('baixo', 'médio', 'alto'))
+
+ordem <- factor(c('baixo', 'médio', 'alto'),
+                levels = c('baixo', 'médio', 'alto'))
+
+ordem <- factor(c('2', '4', '1')) #ordem numérica
+
+
+
+
 # factor (variáveis que podem ser ordenadas, i.e., categóricas - podem ser caracteres, números, inteiros...)
-ordem <- factor(c('baixo', 'médio', 'alto')) #ordem alfabética
+ordem <- factor(c('baixo', 'médio', 'alto'),
+                levels = c('baixo', 'médio', 'alto')) #ordem alfabética
 
 ordem <- factor(c('2', '4', '1')) #ordem numérica
 ordem <- factor(c('2', '4', '1'),
@@ -86,6 +115,9 @@ is.factor(ordem)
 # numeric (permite operações matemáticas)
 valor <- 100
 is.numeric(100)
+
+
+
 
 valor <- as.numeric(as.character('texto'))
 is.numeric(valor)
@@ -99,16 +131,42 @@ valor <- as.integer(1.2)
 is.integer(valor)
 
 
-# Date (dates)
+library(tidyverse)
+library(lubridate)
+
+# Date (dates) e tempos ----
+# datas (ano, mês, dia) são representadas pela classe Date. ​
+
+#Tempos (ano, mês, dia, hora, minuto, segundo etc.) são representados pelas classes POSIXct ou POSIXlt​
+
+#Além disso, também existe a função as.POSIXct(), que é uma representação mais compacta de data e hora, geralmente preferida para cálculos, pois utiliza menos memória do que POSIXlt(). ​
+
+#ct significa tempo de calendário, ele armazena o número de segundos desde a origem. ​
+
+#lt, ou hora local, mantém a data como uma lista de atributos de hora. ​
+
+#Internamente, as datas são armazenadas como o número de dias desde 01/01/1970. Horas são armazenadas como o número de segundos desde 01/01/1970.
+
+
 hoje <- "2025-12-01"
+hoje <- ymd("2025-12-01")
+
 
 # Timestamps (data e hora, POSIXct)
 datetime <- "2025-12-01 00:01:00"
+tz(datetime)
+
+data_objeto <- as.POSIXct(data_string, format = "%d-%m-%Y %H:%M:%S")
+
+# Timestamps (data e hora, lubridate package)
+datetime <- ymd_hms("2025-12-01 00:00:01", tz = "America/Sao_Paulo")
+
 lubridate::tz(datetime)
 
-datetime <- lubridate::ymd_hms("2025-12-01 00:01:00", tz = "America/Sao_Paulo")
-lubridate::tz(datetime)
 
+## outra forma:
+data_objeto <- as.POSIXct("01-01-2024 00:00:01", 
+                          format = "%d-%m-%Y %H:%M:%S")
 
 
 # Remoção de uma ou mais variáveis: 
@@ -130,6 +188,7 @@ ls()
 #! O símbolo %>% - "pipe" - permite encadear operações e proporciona melhor legibilidade
 
 
+
 # Em caso de funções:
 
 f(arg_1, arg_2, ..., arg_n) # é equivalente a:
@@ -139,6 +198,11 @@ arg1 %>% f(arg_2, ., arg_3, ..., arg_n) # e a:
 
 
 # E quando um dataframe 'df' é modificado por sucessivas operações (operation_1,... operation_n):
+
+df <- operation_1(df$params_1)
+
+
+
 
 df %>%
   operation_1(params_1) %>%
@@ -176,6 +240,25 @@ df %>%
 # Sumário estatístico das colunas:
 df %>%
   summary()
+
+
+### Exemplo:
+View(df$Year)
+
+df$Year
+
+str(df)
+
+df <- df %>%
+  mutate(Year = mdy_hm(Year),
+         ano = year(Year)) %>%
+  select(-Year)
+
+df %>% tail(3)
+
+
+df1 <- df %>%
+  filter(ano != 2004)
 
 
 ####-- Quais os tipos de dados  --####

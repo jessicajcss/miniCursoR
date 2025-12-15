@@ -152,6 +152,23 @@ x <= 2 | x >= 4
 
 
 # Outros tipos de dados (Data Frames, matrizes e listas)
+# https://lhmet.github.io/adar-ebook/
+
+
+# Dataframes 
+
+dados <- data.frame(
+  datas = c(
+    "2013-01-01", "2013-01-02", "2013-01-03", "2013-01-04", "2013-01-05",
+    "2013-01-06", "2013-01-07", "2013-01-08", "2013-01-09", "2013-01-10",
+    "2013-01-11", "2013-01-12", "2013-01-13", "2013-01-14", "2013-01-15"
+  ),
+  cidade = rep("Santa Maria", 15),
+  tar = c(31, 35, 21, 23, 33, 17, 18, 16, 34, 27, 15, 28, 22, 29, 32)
+)
+
+
+
 # Matrizes
 m <- matrix(nrow = 2, ncol = 3); m
 attributes(m)
