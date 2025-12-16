@@ -12,10 +12,13 @@
 
 getwd() 
 
-# Definir um caminho:
-path <- "./" # '<-' ou '=' podem ser usados, mas '<-' funciona exclusivamente para atribuição de objetos (variáveis)
+a <- 1
 
-path <- "C:/Users/jessi/OneDrive/Desktop/miniCursoR/data"
+# Definir um caminho:
+path <- "./data/exer" # '<-' ou '=' podem ser usados, mas '<-' funciona exclusivamente para atribuição de objetos (variáveis)
+
+path <- "C:/Users/jessi/OneDrive - ufpr.br/week_temps/postdoc_UDESC/git/miniCursoR"
+
 
 df <- read.csv("./data/exer/National Parks Visitation Data.csv")
 
@@ -42,7 +45,7 @@ list.files(path, include.dirs = TRUE)
 file_test('-f', path)
 
 # Ler/Salvar um arquivo .csv:
-read.csv("./data/exer/National Parks Visitation Data.csv")
+df <- read.csv("./data/exer/National Parks Visitation Data.csv")
 
 write.csv(df, "./output/dados_parques.csv")
 
@@ -53,14 +56,17 @@ write.csv(df, "./output/dados_parques.csv")
 ###########################################
 # Linguagem básica para operações em R ----
 ###########################################
+
 #! representação decimal no R é o ponto “.” e não a vírgula “,”;
 #! o símbolo # indica que tudo que está à direita dele é um comentário;
 #! Inf - representa um número grande o suficiente que o computador não consegue representá-lo, ou um limite matemático;
 #! NaN - Not a Number: representa indefinições matemáticas;
 #! NA - Not Available: representa ausência de informação, inconsistência nos dados. Em operações matemáticas, resultam em NA;
+
 #! Atribuiçao de variáveis: usa-se o operador '<-' ou '=';
+
 #! O R é case sensitive, i.e., faz distinção entre letras maiúsculas e minúsculas;
-#! Caracteres especiais, espaços e início numérico para os nomes das variáveis ou funções não são permitidos;
+#! Caracteres especiais, espaços e início numérico para os nomes das variáveis ou funções não são permitidos;
 #! Não é recomendada a utilização de acentuação.
 
 
@@ -72,7 +78,7 @@ write.csv(df, "./output/dados_parques.csv")
 # No “Console”, o termo [1] não  um resultado, apenas significa que a impressão do resultado ocupa uma linha do console.
 # Duas ou mais operações podem ser feitas em uma mesma linha de código, basta colocar um ponto e vírgula “;” entre elas.
 
-
+1 + 1; 2 + 2
 
 ####-- Classes de variáveis (tipos de dados) --####
 
@@ -87,9 +93,11 @@ is.character(texto)
 
 # Lista
 ordem <- c('baixo', 'médio', 'alto')
+numeros <- c('1', '1', '2')
 
-
+numeros[3]
 ordem[2]
+
 
 ordem <- factor(c('baixo', 'médio', 'alto'))
 
@@ -119,8 +127,9 @@ is.numeric(100)
 
 
 
-valor <- as.numeric(as.character('texto'))
-is.numeric(valor)
+valor <- as.character(1)
+valor <- '1'
+is.character(valor)
 
 
 # integer (número do conjunto dos inteiros)
@@ -135,20 +144,20 @@ library(tidyverse)
 library(lubridate)
 
 # Date (dates) e tempos ----
-# datas (ano, mês, dia) são representadas pela classe Date. ​
+# datas (ano, mês, dia) são representadas pela classe Date.
 
-#Tempos (ano, mês, dia, hora, minuto, segundo etc.) são representados pelas classes POSIXct ou POSIXlt​
+#Tempos (ano, mês, dia, hora, minuto, segundo etc.) são representados pelas classes POSIXct ou POSIXlt
 
-#Além disso, também existe a função as.POSIXct(), que é uma representação mais compacta de data e hora, geralmente preferida para cálculos, pois utiliza menos memória do que POSIXlt(). ​
+#Além disso, também existe a função as.POSIXct(), que é uma representação mais compacta de data e hora, geralmente preferida para cálculos, pois utiliza menos memória do que POSIXlt().
 
-#ct significa tempo de calendário, ele armazena o número de segundos desde a origem. ​
+#ct significa tempo de calendário, ele armazena o número de segundos desde a origem.
 
 #lt, ou hora local, mantém a data como uma lista de atributos de hora. ​
 
 #Internamente, as datas são armazenadas como o número de dias desde 01/01/1970. Horas são armazenadas como o número de segundos desde 01/01/1970.
 
 
-hoje <- "2025-12-01"
+hoje <- "2025-12-15"
 hoje <- ymd("2025-12-01")
 
 
@@ -156,7 +165,7 @@ hoje <- ymd("2025-12-01")
 datetime <- "2025-12-01 00:01:00"
 tz(datetime)
 
-data_objeto <- as.POSIXct(data_string, format = "%d-%m-%Y %H:%M:%S")
+
 
 # Timestamps (data e hora, lubridate package)
 datetime <- ymd_hms("2025-12-01 00:00:01", tz = "America/Sao_Paulo")
@@ -170,7 +179,7 @@ data_objeto <- as.POSIXct("01-01-2024 00:00:01",
 
 
 # Remoção de uma ou mais variáveis: 
-rm(texto, horas) 
+rm(texto) 
 ls()
 
 # Remoção de todas as variáveis: 
@@ -187,6 +196,15 @@ ls()
 
 #! O símbolo %>% - "pipe" - permite encadear operações e proporciona melhor legibilidade
 
+
+df$Year 
+
+mean(df$Visitors, na.rm = T)
+
+df %>%
+  select(Visitors) %>%
+  colMeans(na.rm = T)
+  
 
 
 # Em caso de funções:
@@ -222,20 +240,20 @@ df %>%
 ####-- Como são os dados  --####
 
 # Selecione as colunas de interesse:
-df %>%
-  select(col_list)
+df1 <- df %>%
+  select(Year)
 
 # Remover colunas:
-df %>%
-  select(-col_list)
+df1 <- df %>%
+  select(-Year)
 
 # Visualizar as primeiras 'n' colunas:
 df %>%
-  head(n)
+  head(3)
 
 # Visualizar as últimas 'n' colunas:
 df %>%
-  tail(n)
+  tail(3)
 
 # Sumário estatístico das colunas:
 df %>%
@@ -243,22 +261,24 @@ df %>%
 
 
 ### Exemplo:
-View(df$Year)
+View(df)
 
 df$Year
 
 str(df)
 
-df <- df %>%
+df2 <- df %>%
   mutate(Year = mdy_hm(Year),
          ano = year(Year)) %>%
   select(-Year)
 
+
+
 df %>% tail(3)
 
 
-df1 <- df %>%
-  filter(ano != 2004)
+df1 <- df2 %>%
+  filter(ano == 2004)
 
 
 ####-- Quais os tipos de dados  --####
@@ -289,7 +309,7 @@ df %>%
   filter(some_col >= some_value) %>% # maior ou igual a
   filter(some_col == col_name & some_col >= some_value) %>% # 'igual a 'E' maior ou igual a
   filter(some_col == col_name | some_col == col_name2) %>% # igual a 'OU' igual a
-  filter(is.na(some_col)) %>% # selecionar valores faltantes
+  filter(!is.na(some_col)) %>% # selecionar valores faltantes
   filter(some_value %in% c(val_1, ..., val_n)) %>% # pertencem a
   filter(some_value %like%  'val') # padrão correspondente
 
@@ -299,7 +319,7 @@ df %>%
 # && avalia a 1ª condição e, somente se ela é verdadeira, então avaliará a segunda condição. Por outro lado, & avalia todas as condições. A ideia é a mesma para | e ||.
 
 # Operadores lógicos (Boolean operators)
-## & e  && 	#  ( e - conjunção);
+## & e  && #  ( e - conjunção);
 ## | e  || #  (ou - disjunção);
 ## ! # (não negação)
 ### O resultado é um valor lógico (TRUE ou FALSE).
