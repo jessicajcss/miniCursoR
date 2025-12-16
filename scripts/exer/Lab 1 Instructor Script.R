@@ -50,8 +50,8 @@ library(tidyverse)
 # Peca para arrastarem e soltarem o arquivo na pasta do projeto e observe que ele aparece automaticamente na aba 'Files' do RStudio. Isso acontece porque o R sabe que ele foi adicionado ao nosso diretorio de trabalho. 
 
 # Uma vez que esta no projeto, e facil carregar usando read_csv().
-
-np_visits <- read_csv("National Park Visitation Data.csv") # Certifique-se de que eles se acostumem a adicionar comentarios apos cada linha de codigo!
+getwd()
+np_visits <- read.csv("./data/exer/National Parks Visitation Data.csv") # Certifique-se de que eles se acostumem a adicionar comentarios apos cada linha de codigo!
 
 ######################################################
 # Parte 5. Explorando os dados
