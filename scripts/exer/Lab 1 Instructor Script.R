@@ -16,9 +16,9 @@
 
 ### Pe??a para criarem um novo projeto (apóss criar uma pasta para ESM 206/Labs/Lab Week 1) em File > New Project. 
 
-### Quando voc?? abre o projeto, o R reconhece isso como seu diretório de trabalho. Observe que o caminho aparece na barra superior do RStudio, e quaisquer arquivos que voce salve/adicione sao automaticamente incluidos nesse diretorio de trabalho. Uma pasta para todo o projeto tambem e criada.
+### Quando voce abre o projeto, o R reconhece isso como seu diretório de trabalho. Observe que o caminho aparece na barra superior do RStudio, e quaisquer arquivos que voce salve/adicione sao automaticamente incluidos nesse diretorio de trabalho. Uma pasta para todo o projeto tambem e criada.
 
-### Agora temos um projeto criado, e ele est?? esperando que realmente contribuamos com algo. Hoje vamos trabalhar em algo chamado SCRIPT. Ele e como um editor de texto (em oposicao ao console sempre ativo) e so executa linhas de codigo quando voce pede. Ele tambem permite manter um registro claro do trabalho que foi feito. 
+### Agora temos um projeto criado, e ele esta esperando que realmente contribuamos com algo. Hoje vamos trabalhar em algo chamado SCRIPT. Ele e como um editor de texto (em oposicao ao console sempre ativo) e so executa linhas de codigo quando voce pede. Ele tambem permite manter um registro claro do trabalho que foi feito. 
 
 ######################################################
 # Parte 3. Scripts - Bons habitos, organizacao e outras coisas
@@ -51,7 +51,12 @@ library(tidyverse)
 
 # Uma vez que esta no projeto, e facil carregar usando read_csv().
 getwd()
+
 np_visits <- read.csv("./data/exer/National Parks Visitation Data.csv") # Certifique-se de que eles se acostumem a adicionar comentarios apos cada linha de codigo!
+
+
+library(data.table)
+np_visits <- fread("./data/exer/National Parks Visitation Data.csv") # Certifique-se de que eles se acostumem a adicionar comentarios apos cada linha de codigo!
 
 ######################################################
 # Parte 5. Explorando os dados
@@ -62,7 +67,7 @@ np_visits <- read.csv("./data/exer/National Parks Visitation Data.csv") # Certif
 names(np_visits) # Mostra os nomes das variaveis (colunas)
 dim(np_visits) # Dimensoes do conjunto de dados
 class(np_visits) # Classe do objeto de dados
-head(np_visits) # Mostra as primeiras 6 linhas do conjunto de dados
+head(np_visits, 1) # Mostra as primeiras 6 linhas do conjunto de dados
 tail(np_visits) # Mostra as ultimas 6 linhas do conjunto de dados
 
 # Quer saber como uma funcao funciona?
@@ -75,6 +80,9 @@ Reg <- np_visits$Region # Um vetor contendo apenas as informacoes da coluna 'Reg
 
 MaxVis <- max(np_visits$Visitors, na.rm = TRUE) # Encontra o valor maximo da coluna 'Visitors' no data frame NPDF (isso e uma boa forma de mostrar o que pode acontecer se houver valores NA)
 
+
+
+
 #######################################################
 # Parte 6. Manipulacao basica de dados (funcoes do dplyr)
 #######################################################
@@ -82,21 +90,63 @@ MaxVis <- max(np_visits$Visitors, na.rm = TRUE) # Encontra o valor maximo da col
 df1 <- select(np_visits, State:YearRaw) # Seleciona apenas as colunas de State ate YearRaw no data frame NPDF, armazenando como um novo data frame 'df1'
 View(df1) # Lembre-se de olhar os dados!
 
-df2 <- filter(df1, State == "CA" & Type == "National Park" & YearRaw >= 1950) # Filtra para manter apenas linhas em que o estado e 'CA' e o tipo e 'National Park' E apenas anos maiores ou iguais a 1950, armazenando como um novo subconjunto 'df2'
+
+
+df1 <- np_visits %>%
+  select(State:YearRaw)
+
+
+
+
+df2 <- filter(df1, 
+              State == "CA" & Type == "National Park" & YearRaw >= 1950) # Filtra para manter apenas linhas em que o estado e 'CA' e o tipo e 'National Park' E apenas anos maiores ou iguais a 1950, armazenando como um novo subconjunto 'df2'
 View(df2) # Sempre olhe!
+
+df2 <- df1 %>%
+  filter(State == "CA" & Type == "National Park" & YearRaw >= 1950)
+
+
+
+
 
 df3 <- arrange(df2, Code, YearRaw) # Organiza os dados primeiro pela ordem alfabetica da coluna 'Code' e DEPOIS pela ordem crescente da coluna YearRaw
 View(df3)
 
+df3 <- df2 %>%
+  arrange(Code, YearRaw)
+
+
+
 df4 <- mutate(df3, kVis = Visitors/1000) # Adiciona uma NOVA coluna chamada 'kVis' (milhares de visitantes) ao 'df3', que e a coluna Visitors dividida por 1000
 View(df4)
 
+
+
+df4 <- df3 %>%
+  mutate(kVis = Visitors/1000)
+
+
+
+
 df5 <- filter(df4, YearRaw != "Total") # Remove quaisquer valores 'Total' da coluna YearRaw (!= significa "NAO corresponde")
 # Verificar a classe de cada coluna
+
+df5 <- df4 %>%
+  filter(YearRaw != "Total")
+
+
+
 summary(df5) # Ops. YearRaw esta armazenado como caractere (porque tinha valores 'Total'). Queremos que seja numerico para usar facilmente como eixo x. 
 
+
+
 df5$YearRaw <- as.numeric(df5$YearRaw) # Converte a coluna YearRaw de df5 para 'numeric' em vez de 'character'
+
+
+
 class(df5$YearRaw) # Verifique! Agora retorna 'numeric'. Viva!
+
+
 
 
 ### Isso pode parecer um pouco ineficiente. Sim, existe uma forma melhor. Ela se chama "piping" e permite escrever um codigo mais enxuto para operacoes sequenciais em um data frame. 
@@ -119,6 +169,8 @@ utah_np <- np_visits %>%
   filter(State == "UT", Type == "National Park") %>% 
   mutate(mill_vis = Visitors/1000000)
 
+
+
 utah_np
 
 
@@ -134,7 +186,11 @@ utah_np
 # (3) Que tipo de grafico voce quer criar
 # Tudo depois disso e extra para deixa-lo bonito
 
-VisitorGraph <- ggplot(df5, aes(x = YearRaw, y = kVis)) +
+library(ggplot2)
+
+
+VisitorGraph <- ggplot(df5, 
+                       aes(x = YearRaw, y = kVis)) +
   geom_point()
 
 windows() # em um PC sera windows()!
@@ -149,17 +205,43 @@ VisitorGraph2 <- ggplot(df5, aes(x = YearRaw, y = kVis)) + # Diz ao R quais dado
   ggtitle("California National Parks Visitation\n1950 - 2016") + # Adiciona um titulo
   xlab("\nYear") + # \n adiciona uma linha em branco antes do rotulo
   ylab("Thousands of Visitors\n") + # Aqui depois do rotulo
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) + # Limpa a area do grafico (remove grades, fundo, etc.)
-  scale_x_continuous(breaks = c(1950,1960,1970,1980,1990,2000,2010,2020)) # Define onde os marcadores do eixo x aparecem
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black")) + # Limpa a area do grafico (remove grades, fundo, etc.)
+  scale_x_continuous(breaks = c(1950,1960,1970,1980,1990,2000,2010)) # Define onde os marcadores do eixo x aparecem
 
 windows() # em um PC!
 VisitorGraph2
 
 # Quer criar um grafico interativo? Use plotly! 
 
-# library(plotly)
-# ggplotly(VisitorGraph2)
+library(plotly)
+install.packages("plotly")
+
+ggplotly(VisitorGraph2)
+
+
+
+
+VisitorGraph2 <- ggplot(df5, aes(x = YearRaw, y = kVis, group = Code)) +
+  geom_point(aes(colour = Code)) +
+  geom_line(aes(colour = Code)) +
+  ggtitle("California National Parks Visitation\n1950 - 2016") +
+  xlab("\nYear") +
+  ylab("Thousands of Visitors\n") +
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(), 
+    axis.line = element_line(colour = "black")
+  )
+
+(VisitorGraph2)
+
+
+
+
 
 ######################################################
 # Parte 8. Outro grafico ggplot (nao feito no laboratorio)
@@ -167,13 +249,15 @@ VisitorGraph2
 
 VisBoxplot <- ggplot(df5, aes(x = Code, y = kVis)) +
   geom_boxplot(aes(fill = Code)) +
-  theme_bw() +
   ggtitle("CA National Park Visitation (1950 - 2016)") +
   xlab("National Park") +
   ylab("Thousands of Visitors") +
-  scale_x_discrete(breaks = c("CHIS","DEVA","JOTR","KICA","LAVO","PINN","REDW","SEQU","YOSE"), labels = c("Channel Islands","Death Valley","Joshua Tree","Kings Canyon","Lassen Volcanic","Pinnacles","Redwoods","Sequoia","Yosemite")) +
+  scale_x_discrete(
+    breaks = c("CHIS","DEVA","JOTR","KICA","LAVO","PINN","REDW","SEQU","YOSE"),
+    labels = c("Channel\n Islands","Death Valley","Joshua Tree","Kings Canyon","Lassen\n Volcanic","Pinnacles","Redwoods","Sequoia","Yosemite")) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45)) 
+  theme(axis.text.x = element_text(angle = 45, 
+                                   hjust = 1)) 
 
 
 windows() # Lembre-se: mudar para windows() em um PC

@@ -232,7 +232,7 @@ x[[6]] * 10
 # Funções
 sqrt(64)
 seq(1, 10)
-log(10)
+log10(10)
 
 # Entender os argumentos de uma função
 args(log)
@@ -243,6 +243,8 @@ log(100)
 log(x = 100, base = 10)
 log(100, 10)
 log(base = 10, x = 100)
+
+
 
 # Criando a nossa função!
 # Área de um retângulo
