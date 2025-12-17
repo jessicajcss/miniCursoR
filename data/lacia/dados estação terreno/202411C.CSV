@@ -1,0 +1,2 @@
+Time,Indoor Temperature(C),Indoor Humidity(%),Outdoor Temperature(C),Outdoor Humidity(%),Dew Point(C),Wind Chill(C),Heat Index(C),ABS Pressure(mmhg),REL Pressure(mmhg),Wind(m/s),Gust(m/s),Wind Direction(deg),Rain Event(mm),Rain Rate(mm/h),Hour Rain(mm),Daily Rain(mm),Weekly Rain(mm),Monthly Rain(mm),Yearly Rain(mm),Total Rain(mm),Solar Rad(w/m2),UVI,Soilmoisture(%),PM2.5(ug/m3),leafwetness(%),Temperature(C)
+2024/11/26 14:42:15,40.6,56,41.2,40,24.9,41.2,51.0,755.8,755.7,0,0,259,3.6,0,0,0.6,4.8,25.5,25.5,25.5,0,0,-,6553,-,-
