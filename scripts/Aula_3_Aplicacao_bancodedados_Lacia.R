@@ -10,10 +10,13 @@
 ######################################################
 
 library(tidyverse)   # Manipulação e visualização de dados
+
+install.packages("data.table")
 library(data.table)  # Leitura rápida de arquivos grandes (fread)
 
+
 ######################################################
-# Parte 1. Upload do banco de dados – Estação Terreno
+# Parte 1. Upload do banco de dados – Estação Terreno ----
 ######################################################
 
 # Listar arquivos CSV do diretório da estação terreno
@@ -24,18 +27,22 @@ temp <- list.files(
 
 head(temp)
 
+
 # Definir diretório base
-dir <- "./data/lacia/dados estação terreno/"
+dir <- "./data/lacia/dados estação terreno"
 
 # Criar caminhos completos dos arquivos
 temp.qualified <- paste(dir, temp, sep = "/")
 
 # Leitura de todos os arquivos CSV
-myfiles <- lapply(temp.qualified, fread)
+myfiles <- lapply(temp.qualified,
+                  read.delim,
+                  sep = ",")
 
 class(myfiles)
 summary(myfiles)
 View(myfiles)
+
 
 ######################################################
 # Verificação de consistência dos nomes das colunas
@@ -55,14 +62,20 @@ my_func <- function(x, y) {
 # Exemplo de comparação entre dois arquivos
 my_func(myfiles[[1]], myfiles[[14]])
 
+
+
 ######################################################
 # Unificação das planilhas da estação terreno
 ######################################################
+bind_rows()
 
 dados_estacao <- do.call("rbind", myfiles)
 
+
+
+
 ######################################################
-# Parte 2. Upload do banco de dados – Dados de Nível
+# Parte 2. Upload do banco de dados – Dados de Nível ----
 ######################################################
 
 # Listar arquivos CSV do diretório de dados de nível
@@ -74,7 +87,7 @@ temp <- list.files(
 head(temp)
 
 # Definir diretório base
-dir <- "./data/lacia/dados nível/"
+dir <- "./data/lacia/dados nível"
 
 # Criar caminhos completos
 temp.qualified <- paste(dir, temp, sep = "/")
@@ -83,15 +96,22 @@ temp.qualified <- paste(dir, temp, sep = "/")
 # Leitura do primeiro arquivo (inspeção inicial)
 ######################################################
 
-myfiles0 <- fread(
+myfiles <- lapply(temp.qualified,
+                  read.delim,
+                  header = TRUE,
+                  sep = ",",
+                  dec = ",",
+                  skip = 11)
+
+
+myfiles0 <- fread(  #  Para resolver problemas do banco de dados de entrada, que contém "'" no início da primeira linha.
   temp.qualified[1],
-  header = TRUE,
+  drop = "Não",
   sep = ",",
-  dec = ",",
   skip = 10
 )
 
-View(myfiles0[1])
+#View(myfiles0[1])
 
 ######################################################
 # Leitura dos demais arquivos
@@ -102,7 +122,7 @@ myfiles <- lapply(
   fread,
   drop = "Não",
   header = TRUE,
-  skip = 10
+  skip = 11
 )
 
 class(myfiles)
@@ -124,16 +144,19 @@ my_func <- function(x, y) {
   }
 }
 
-my_func(myfiles[[1]], myfiles[[6]])
+my_func(myfiles[[1]], myfiles[[7]])
 
 ######################################################
 # Unificação das planilhas de dados de nível
 ######################################################
 
-dados_nivel <- do.call("bind_rows", myfiles)
+dados_nivel <- do.call("bind_rows", myfiles) # aqui, usou-se aplenas o 'myfiles' pois banco de dados myfiles[[1]] repete-se no myfiles[[2]]
+
+
+
 
 ######################################################
-# Parte 3. Conversão do separador decimal
+# Parte 3. Data wrangling: Conversão do separador decimal
 ######################################################
 
 # OPÇÃO 1 – Converter colunas nomeadas
@@ -153,13 +176,76 @@ cols_to_convert <- c(2:5)
 dados_nivel <- dados_nivel %>%
   mutate(
     across(
-      all_of(cols_to_convert),
+      all_of(c(2:5)),
       ~ as.numeric(gsub(",", ".", .x, fixed = TRUE))
     )
   )
+
+
+dados_nivel <- dados_nivel %>%
+  mutate(temp = `Temperatura (°C)`)
+
+
+
+
+
+######################################################
+# Parte 3. Data wrangling: Conversão colunas numéricas
+######################################################
+
+
+dados_estacao <- dados_estacao %>%
+  mutate(across(c(2:27), ~ as.numeric(as.character(.))),
+         Time = ymd_hms(Time, tz = "America/Sao_Paulo"))
+
+
+
+dados_nivel <- dados_nivel %>%
+  mutate(Data = dmy_hms(Data, tz = "America/Sao_Paulo"))
+
+dados_nivel <- dados_nivel %>%
+  mutate(Data = dmy_hms(Data, tz = "America/Sao_Paulo"))
+
+
+######################################################
+# Parte 3. Data wrangling: Eliminar linhas duplicadas
+######################################################
+
+dados_estacao <- dados_estacao %>%
+  unique()
+
+
+dados_nivel <- dados_nivel %>%
+  distinct()
 
 ######################################################
 # Objetos finais:
 # - dados_estacao : dados consolidados da estação terreno
 # - dados_nivel   : dados consolidados de nível (numéricos ajustados)
 ######################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######################################################
+# Parte 4. Visualização
+######################################################
+
+
+
+
+
